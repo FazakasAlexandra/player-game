@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player game</title>
+
+    <style>
+        *{
+            font-family: Arial, Helvetica, sans-serif; 
+            color: #4b4b4b
+        }
+
+        #info-container{
+            margin-left : 50px
+        }
+
+        #score{
+            letter-spacing: 2px;
+        }
+
+        #container{
+            background-color: #DAE3D9;
+            margin : 50px;
+            margin-top: 10px;
+            position: relative;
+            width: 80%;
+            height: 500px;
+        }
+
+        .goldCircles{
+            border-radius: 20px;
+            color: #f4a80d;
+        }
+
+        #innerCircle{
+            margin-left: 10px;
+            margin-top:10px
+        }
+
+        span{
+            color: #f4a80d;
+            margin-left: 5px;
+            font-size: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="info-container"></div>
+    <div id="container"></div>
+
+    <script src = "./classes/Game.js"></script>
+    <script src = "./classes/Gold.js"></script>
+    <script src = "./classes/Obstacle.js"></script>
+    <script src = "./classes/Player.js"></script>
+    <script src = "app.js"></script>
+</body>
+</html>
