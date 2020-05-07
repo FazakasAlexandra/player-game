@@ -1,7 +1,8 @@
 class Gold {
     constructor(map, nrGold){
+        //get rid of the map
         this.map = map
-        this.golds = Gold.createGolds(nrGold, map)
+        this.goldList = Gold.createGolds(nrGold, map)
     }
 
 
@@ -15,40 +16,29 @@ class Gold {
 
 
     static createGold = (map, width, heigh) => {
-        const mapWidth = map.getBoundingClientRect().width;
-        const mapHeight = map.getBoundingClientRect().height;
-
-        let top = Math.floor(Math.random() * (mapHeight-40));
-        let left = Math.floor(Math.random() * (mapWidth-40));
-        
-        let outerCircle = Gold.createOuterCircle(map, width + 20, heigh + 20, top, left)
-        let innerCircle = Gold.createInnerCircle(map, width, heigh, top, left)
+        let outerCircle = Gold.createOuterCircle(map, width + 20, heigh + 20)
+        let innerCircle = Gold.createInnerCircle(map, width, heigh)
 
         return {outerCircle,innerCircle}
     }
 
 
-    static createOuterCircle = (map, width, heigh, top, left) => {
+    static createOuterCircle = (map, width, heigh) => {
         let outerCircle = document.createElement('div')
         outerCircle.className = 'goldCircles'
         outerCircle.setAttribute('id', 'outerCircle') 
 
         let { style } = outerCircle;
-
         style.width = `${width}px`
         style.height = `${heigh}px`
         style.backgroundColor = '#f4a80d'
         style.position = "absolute";
-        style.top = `${top}px`
-        style.left = `${left}px`
-
-        map.appendChild(outerCircle)
 
         return outerCircle
     }
 
 
-    static createInnerCircle = (map, width, heigh, top, left) => {
+    static createInnerCircle = (map, width, heigh) => {
         let innerCircle = document.createElement('div')
         innerCircle.className = 'goldCircles'
         innerCircle.setAttribute('id', 'innerCircle') 
@@ -56,15 +46,11 @@ class Gold {
         cash.innerText = '$'
 
         let { style } = innerCircle;
-
         style.width = `${width}px`
         style.height = `${heigh}px`
         style.backgroundColor = '#f4cf0d'
         style.position = "absolute";
-        style.top = `${top}px`
-        style.left = `${left}px`
 
-        map.appendChild(innerCircle)
         innerCircle.appendChild(cash)
 
         return innerCircle

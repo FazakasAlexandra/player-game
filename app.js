@@ -8,6 +8,10 @@ let gameInfo = document.getElementById('info-container')
 let game = new Game(gameMap, gameInfo)
 
 
-// 1) the gold and obstacles should not overlay the player
-// 2) the gold and obstacles should not get outside the map
-// 3) 
+// 1) the gold and obstacles should not overlay the player - ok 
+// 2) the gold and obstacles should not get outside the map - ok
+// 3) the golds and obstacles shold not overlay themselves of eachother 
+// 4) the player should not be able to pass the obstacles
+// 5) players life should be decreased if the player position is close enough to one of the obstacles
+// 6) score increses when players position is close enough to one of the golds
+// 7) gold disapers and gets repositioned after 6)

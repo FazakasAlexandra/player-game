@@ -5,69 +5,61 @@ import { Player } from "./Player.js"
 class Game {
     constructor(map, gameInfo){
     this.map = map
+    this.mapWidth = this.map.getBoundingClientRect().width
+    this.mapHeight = this.map.getBoundingClientRect().height
     this.gameInfo = gameInfo
-    this.player = new Player(map);
+    this.player = new Player(map)
     this.obstacles = new Obstacle(map, 5)
-    this.renderObstacles()
     this.golds = new Gold(map, 2)
-    //this.renderGolds()
-    this.player.move()
-    this.decreaseLife()
     this.score = 0
-    this.showScore()
+
+    this.renderObstacles()
+    this.renderGolds()
+    this.player.move()
+    //this.decreaseLife()
+    //this.showScore()
     }
 
     renderObstacles(){
         let { obstacles : { obstacleList }} = this
        
         obstacleList.forEach(obstacle => {
-            let obstacleTop = parseInt(obstacle.style.top)
-            let obstacleLeft = parseInt(obstacle.style.left)
+            let obstaclePosition = this.createPosition ()
+            obstacle.style.top = `${obstaclePosition.top}px`
+            obstacle.style.left = `${obstaclePosition.left}px`
 
-            if(obstacleTop >= 100 && obstacleLeft >= 40){ 
-                this.map.appendChild(obstacle)
-            } else {
-                let obstaclePosition = this.newPosition ()
-                let newLeft = `${obstaclePosition.left}px`
-                let newTop = `${obstaclePosition.top}px`
-
-                obstacle.style.left = newLeft
-                obstacle.style.top = newTop
-
-                this.map.appendChild(obstacle)
-            }
+            this.map.appendChild(obstacle)
         });
     }
 
-  /*   renderGolds(){
-        let { obstacles : { obstacleList }} = this
-       
-        obstacleList.forEach(obstacle => {
-            let obstacleTop = parseInt(obstacle.style.top)
-            let obstacleLeft = parseInt(obstacle.style.left)
+    renderGolds(){
+        //more destrucure
+        let { golds : {goldList} } = this
 
-            if(obstacleTop >= 100 && obstacleLeft >= 40){ 
-                this.map.appendChild(obstacle)
-            } else {
-                let obstaclePosition = this.newPosition ()
-                let newLeft = `${obstaclePosition.left}px`
-                let newTop = `${obstaclePosition.top}px`
+        goldList.forEach(gold => {
+            let goldPosition = this.createPosition ()
+            gold.innerCircle.style.top = `${goldPosition.top}px`
+            gold.innerCircle.style.left = `${goldPosition.left}px`
+            gold.outerCircle.style.top = `${goldPosition.top}px`
+            gold.outerCircle.style.left = `${goldPosition.left}px`
+            this.map.appendChild(gold.outerCircle)
+            this.map.appendChild(gold.innerCircle)
+        })
+    } 
 
-                obstacle.style.left = newLeft
-                obstacle.style.top = newTop
-
-                this.map.appendChild(obstacle)
-            }
-        });
-    } */
-
-    newPosition () {
-        let top = Math.floor(Math.random() * (360 - 120) + 100);
-        let left = Math.floor(Math.random() * (460 - 50) + 40);
+    createPosition () {
+        // obstacle position !== player position
+        let top = Math.floor(Math.random() * (this.mapHeight - 40 - 120) + 120);
+        let left = Math.floor(Math.random() * (this.mapWidth - 40 - 50) + 50);
 
         return { top, left }
     }
 
+/*     gameOver() {
+
+        if
+    }
+ */
     showScore = () => {
         let score = document.createElement('p')
         score.innerText = 'Gold: ' + `${this.score}`
@@ -75,9 +67,9 @@ class Game {
         this.gameInfo.appendChild(score)
     }
 
-    decreaseLife = () => {
+    /* decreaseLife = () => {
         let playerTop = this.player.body.face.style.top
-        let playerLeft = this.player.body.face.style.top
+        let playerLeft = this.player.body.face.style.left
         //console.log(playerTop)
         //console.log(playerLeft)
 
@@ -109,7 +101,7 @@ class Game {
         const isIntersection = diffTop < chest.style.width && diffLeft < chest.style.width
         
         return isIntersection
-    }
+    } */
 
 
 
