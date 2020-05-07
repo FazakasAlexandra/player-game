@@ -1,12 +1,14 @@
+import { Player } from "./Player.js"
+
 class Obstacle {
     constructor(map, nrObstacles){
         this.map = map
-        this.obstacles = this.createObstacles(nrObstacles)
+        this.obstacleList = this.createObstacles(nrObstacles)
     }
 
     createObstacles(nrObstacles){
         let obstacles = []
-        for(let i = 0; i<nrObstacles; i++){
+        for(let i = 0; i < nrObstacles; i++){
             obstacles[i] = this.createObstacle(40, 40)
         }
 
@@ -20,8 +22,8 @@ class Obstacle {
         const mapWidth = this.map.getBoundingClientRect().width;
         const mapHeight = this.map.getBoundingClientRect().height;
 
-        this.top = Math.floor(Math.random() * mapHeight);
-        this.left = Math.floor(Math.random() * mapWidth);
+        this.top = Math.floor(Math.random() * (mapHeight-40));
+        this.left = Math.floor(Math.random() * (mapWidth-40));
 
         let { style } = obstacle;
 
@@ -31,14 +33,11 @@ class Obstacle {
         style.top = `${this.top}px`
         style.left = `${this.left}px`
 
-
-        this.map.appendChild(obstacle)
-
         return obstacle
     }
 }
 
-
+export { Obstacle }
 
 
 

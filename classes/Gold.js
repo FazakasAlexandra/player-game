@@ -18,8 +18,8 @@ class Gold {
         const mapWidth = map.getBoundingClientRect().width;
         const mapHeight = map.getBoundingClientRect().height;
 
-        let top = Math.floor(Math.random() * mapHeight);
-        let left = Math.floor(Math.random() * mapWidth);
+        let top = Math.floor(Math.random() * (mapHeight-40));
+        let left = Math.floor(Math.random() * (mapWidth-40));
         
         let outerCircle = Gold.createOuterCircle(map, width + 20, heigh + 20, top, left)
         let innerCircle = Gold.createInnerCircle(map, width, heigh, top, left)
@@ -70,3 +70,5 @@ class Gold {
         return innerCircle
     }
 }
+
+export { Gold }
