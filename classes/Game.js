@@ -15,9 +15,9 @@ class Game {
 
     this.renderObstacles()
     this.renderGolds()
+    this.checkIntersection()
     this.player.move()
-    //this.decreaseLife()
-    //this.showScore()
+    this.showScore()
     }
 
     renderObstacles(){
@@ -55,55 +55,76 @@ class Game {
         return { top, left }
     }
 
-/*     gameOver() {
+    checkIntersection() {
+        // decrease life and make the player stop
+        let { obstacles: { obstacleList } } = this
+        console.log(obstacleList)
+        let { body: { face } } = this.player
+        console.log(face)
 
-        if
+        let obstaclesDiff = this.getPositionDiff(obstacleList, face)
+        console.log(obstaclesDiff)
+        let sameTop = false
+        let sameLeft = false
+        let isIntersected = sameTop && sameLeft
+
+        console.log(sameTop, sameLeft, isIntersected)
+
+        document.addEventListener('keyup', (event) =>{
+            console.log(face.style.top)
+            console.log(face.style.left)
+
+            obstaclesDiff.y.diffTop.map(function (nr) {
+                sameTop = nr < face.style.height
+                console.log(sameTop)
+            })
+    
+            obstaclesDiff.x.diffLeft.map(function (nr) {
+                sameLeft = nr < face.style.width
+                console.log(sameLeft)
+            })
+    
+            if (isIntersected) {
+                ('inside if intersection')
+                this.decreaseLife()
+                //stopMove()
+            } 
+        })
     }
- */
+
+    getPositionDiff(array, face) {
+        let diffTop = array.map( function ( element ){
+            let {style : { top }} = element
+            return Math.abs(parseInt(top) - parseInt(face.style.top))
+        })
+
+        let diffLeft = array.map( function ( element ){
+            let {style: { left }} = element
+            return Math.abs(parseInt(left) - parseInt(face.style.left))
+        })
+    
+        return { y: {diffTop}, x:{diffLeft} }
+    }
+
+    decreaseLife(){
+        console.log('inside decrease life function')
+
+        //let { body : { highLife }} = this.player
+        //console.log(highLife)
+        //highLife.innerText 
+    }
+
+    stopMove() {
+
+    }
+    
+ 
     showScore = () => {
         let score = document.createElement('p')
         score.innerText = 'Gold: ' + `${this.score}`
         score.setAttribute('id','score')
         this.gameInfo.appendChild(score)
     }
-
-    /* decreaseLife = () => {
-        let playerTop = this.player.body.face.style.top
-        let playerLeft = this.player.body.face.style.left
-        //console.log(playerTop)
-        //console.log(playerLeft)
-
-        let { obstacles } = this.obstacles
-        const obstaclesTop = obstacles.map( obstacle => obstacle.style.top)
-        const obstaclesLeft = obstacles.map( obstacle => obstacle.style.left)
-
-        //console.log(obstaclesTop)
-        //console.log(obstaclesLeft)
-
-        //const isIntersection = compareTopLeft(playerTop, playerLeft, obstaclesTop, obstaclesLeft)
-
-        //if(isIntersection){
-            // decrese life
-        //}
-    }
-
-    compareTopLeft = (playerTop, playerLeft, elementsTop, elementsLeft, chest) => {
-        // compare the difference between playerTop and each elementTop -> loop through elementTop array
-        // store the difference number in an array
-        // check if in that array there is one number that < chest.style.width
-        // return true if number exists, return false if no 
-        // apply same logic for secound playerLeft and elementLeft
-        // isIntersected = isTopIntersected() && isLeftIntersected
-        // return isIntersected
-    
-        const diffTop = Math.abs(playerTop - elementTop)
-        const diffLeft =  Math.abs(playerLeft - elementLeft)
-        const isIntersection = diffTop < chest.style.width && diffLeft < chest.style.width
-        
-        return isIntersection
-    } */
-
-
 
 }
 
