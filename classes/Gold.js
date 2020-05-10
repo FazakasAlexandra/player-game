@@ -3,6 +3,7 @@ class Gold {
         //get rid of the map
         this.map = map
         this.goldList = Gold.createGolds(nrGold, map)
+        console.log(this.goldList)
     }
 
 

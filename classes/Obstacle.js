@@ -1,9 +1,8 @@
-import { Player } from "./Player.js"
-
 class Obstacle {
     constructor(map, nrObstacles){
         this.map = map
         this.obstacleList = this.createObstacles(nrObstacles)
+        console.log(this.obstacleList)
     }
 
     createObstacles(nrObstacles){

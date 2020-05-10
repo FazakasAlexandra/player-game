@@ -1,45 +1,10 @@
 class Player {
     constructor (map) {
         this.map = map
-        this.life = 90 
+        this.life = 100
+        this.golds = 0
         this.body = Player.createBody(this.map, this.life);
-    }
-
-    move = () => {
-        document.addEventListener('keyup', (event) =>{
-            let oldTop = parseInt(this.body.face.style.top);
-            let oldLeft = parseInt(this.body.face.style.left);
-
-                switch(event.keyCode){
-                case 40 : //down
-                this.body.face.style.top = `${oldTop + 20}px` // 50 + 20 = 70
-                this.body.lowLife.style.top = `${oldTop - 30 + 20}px` // 20 + 20 = 40 sau 50 + 20 = 70
-                this.body.highLife.style.top = `${oldTop - 30 + 20}px`
-                break;
-
-                case 38: //up
-                this.body.face.style.top = `${oldTop - 20}px`
-                this.body.lowLife.style.top = `${oldTop - 30 - 20}px` // hightLife
-                this.body.highLife.style.top = `${oldTop -  30 - 20}px` // lowLife
-                
-                break;
-
-                case 39 : 
-                this.body.face.style.left = `${oldLeft + 20}px`
-                this.body.lowLife.style.left = `${oldLeft + 20}px`
-                this.body.highLife.style.left = `${oldLeft + 20}px`
-                break;
-
-                case 37 : 
-                this.body.face.style.left = `${oldLeft - 20}px`
-                this.body.lowLife.style.left = `${oldLeft - 20}px`
-                this.body.highLife.style.left = `${oldLeft - 20}px`
-                break;
-            }
-            
-        })
-    }
-
+    }    
 
     static createBody = (map, life) => {
         let face = Player.createFace(map)
@@ -96,7 +61,7 @@ class Player {
 
         const { style } = highLife;
 
-        style.width = `60px`;
+        style.width = `70px`;
         style.height = `20px`;
         style.backgroundColor = '#14fb5a'
         style.position = "absolute";
@@ -109,7 +74,25 @@ class Player {
         return  highLife
     }
 
-}
+    decreaseLife(renderFeedBack){
+        let oldWidth = parseInt(this.body.highLife.style.width)
+        this.life = this.life - 10
+        this.body.highLife.style.width = `${oldWidth - 10}px`
+        this.body.highLife.innerText = `${this.life}px`
+        this.body.highLife.innerText = `${this.life}%`
 
+        
+        if (this.life === 0){
+            this.body.highLife.style.width = `0px`
+            this.body.highLife.style.height = `0px`
+            this.body.highLife.innerText = `${this.life}%`
+            setTimeout(function(){
+                alert('game over')
+            }, 300)
+        }
+
+    }
+
+}
 
 export { Player }
