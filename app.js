@@ -6,10 +6,7 @@ let gameInfo = document.getElementById('info-container')
 
 
 let game = new Game(gameMap, gameInfo)
-game.renderObstacles()
-game.renderGolds()
-game.move()
-game.renderGoldInfo()
+game.play()
 
 
 // 1) the gold and obstacles should not overlay the player - ok 

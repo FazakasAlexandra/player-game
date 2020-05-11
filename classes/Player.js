@@ -74,23 +74,32 @@ class Player {
         return  highLife
     }
 
-    decreaseLife(renderFeedBack){
+    decreaseLife(damage){
         let oldWidth = parseInt(this.body.highLife.style.width)
-        this.life = this.life - 10
-        this.body.highLife.style.width = `${oldWidth - 10}px`
+
+        this.life = this.life - damage // 0 - 100
+
+        if(this.life < 0){
+            this.life = 0
+            this.gameOver()
+        }else{
+            this.body.highLife.style.width = `${oldWidth - damage}px`
+            this.body.highLife.innerText = `${this.life}px`
+            this.body.highLife.innerText = `${this.life}%`
+        }
+    }
+
+    gameOver(){
+        this.body.highLife.style.width = `${0}px`
         this.body.highLife.innerText = `${this.life}px`
         this.body.highLife.innerText = `${this.life}%`
+        this.body.highLife.style.width = `0px`
+        this.body.highLife.style.height = `0px`
 
-        
-        if (this.life === 0){
-            this.body.highLife.style.width = `0px`
-            this.body.highLife.style.height = `0px`
-            this.body.highLife.innerText = `${this.life}%`
-            setTimeout(function(){
-                alert('game over')
-            }, 300)
-        }
-
+        this.body.highLife.innerText = `${this.life}%`
+        setTimeout(function(){
+            alert('game over')
+        }, 300)
     }
 
 }

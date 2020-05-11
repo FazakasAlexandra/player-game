@@ -1,20 +1,23 @@
 import { Gold } from "./Gold.js"
 import { Obstacle } from "./Obstacle.js"
 import { Player } from "./Player.js"
+import { FeedBack } from "./FeedBack.js"
 
 class Game {
     constructor(map, gameInfo){
     this.map = map
+    this.gameInfo = gameInfo
     this.mapWidth = this.map.getBoundingClientRect().width 
     this.mapHeight = this.map.getBoundingClientRect().height
     console.log(this.mapWidth)
     console.log(this.mapHeight)
-    
+    this.colectedGolds = 0
+    console.log('game colected gold:' + this.colectedGolds)
+
+    this.hitFeedBack = new FeedBack(map, '#fb5a14')
     this.player = new Player(map) 
     this.obstacles = new Obstacle(map, 3) 
-    this.gameInfo = gameInfo
-    this.golds = new Gold(map, 4)
-    this.colectedGolds = 0
+    this.golds = new Gold(map, this.mapWidth, this.mapHeight, 4)
 
     this.isMapIntersection = false
     this.isObstacleIntersection = false
@@ -37,7 +40,6 @@ class Game {
         let { golds : {goldList} } = this
 
         goldList.forEach((gold, i) => {
-            console.log(i)
             let goldPosition = this.createPosition ()
             gold.innerCircle.style.top = `${goldPosition.top}px`
             gold.innerCircle.style.left = `${goldPosition.left}px`
@@ -45,7 +47,6 @@ class Game {
             gold.outerCircle.style.top = `${goldPosition.top}px`
             gold.outerCircle.style.left = `${goldPosition.left}px`
             gold.outerCircle.setAttribute('id', `${i}`)
-            console.log('id : ' + gold.outerCircle.id )
 
             this.map.appendChild(gold.outerCircle)
             this.map.appendChild(gold.innerCircle)
@@ -80,7 +81,6 @@ class Game {
                 break
             }
         }
-        console.log ({isIntersection, goldId })
 
         return {isIntersection, goldId}
     }
@@ -116,11 +116,12 @@ class Game {
         let { left } = face.style
 
         let isMapintersection = false
-        if( top < '0px' || left < '0px' || left > this.mapWidth - 100 || top > this.mapHeight){
+        if ( parseInt(top) < 0 || parseInt(left) < 0){
+            isMapintersection = true
+        } else if ( parseInt(top) > this.mapHeight - 50 || parseInt(left) > this.mapWidth - 50){
             isMapintersection = true
         }
 
-        console.log(isMapintersection)
         return isMapintersection
     }
 
@@ -128,12 +129,14 @@ class Game {
 
     move = () => {
         document.addEventListener('keyup', (event) =>{
-            let { obstacles: { obstacleList } } = this
+            let { hitFeedBack } = this
+            let { golds } = this
             let { golds : { goldList } } = this
+            let { obstacles: { obstacleList } } = this
             let { body: { face } } = this.player
             let { body } = this.player
-            let { isObstacleIntersection } = this.isObstacleIntersection
             let { isMapIntersection } = this.isMapIntersection
+            let { isObstacleIntersection } = this.isObstacleIntersection
             let oldTop = parseInt (face.style.top);
             let oldLeft = parseInt (face.style.left);
             
@@ -144,15 +147,22 @@ class Game {
                 isObstacleIntersection = this.obstacleIntersection(obstacleList, face)
                 this.goldData = this.goldIntersection(goldList, face)
 
-                        if (isObstacleIntersection || isMapIntersection) {
+                        if (isObstacleIntersection) {
                             face.style.top = `${oldTop - 20}px`
                             body.lowLife.style.top = `${oldTop - 30 - 20}px` // hightLife
                             body.highLife.style.top = `${oldTop - 30 - 20}px` // lowLife
-                            this.player.decreaseLife(this.renderFeedBack('-10', '#fb5a14'))
+                            this.player.decreaseLife(5)
+                            hitFeedBack.renderFeedBack(face, '-5')
                             break;
 
+                        } else if(isMapIntersection){
+                            this.player.decreaseLife(101)
+                            hitFeedBack.renderFeedBack(face, '- 100')
+                            break
+
                         } else if (this.goldData.isIntersection){
-                            this.addGold(this.goldData.goldId)
+                            golds.addGold(this.goldData.goldId, this.colectedGolds, face)
+                            this.colectedGolds = this.colectedGolds + 1
                             break;
 
                         } else {
@@ -167,19 +177,26 @@ class Game {
                 isObstacleIntersection = this.obstacleIntersection(obstacleList, face)
                 this.goldData = this.goldIntersection(goldList, face)
 
-                        if (isObstacleIntersection || isMapIntersection) {
+                        if (isObstacleIntersection) {
                             face.style.top = `${oldTop + 20}px`
                             body.lowLife.style.top = `${oldTop - 30 + 20}px`
                             body.highLife.style.top = `${oldTop - 30 + 20}px`
-                            this.player.decreaseLife(this.renderFeedBack('-10', '#fb5a14'))
+                            this.player.decreaseLife(5)
+                            hitFeedBack.renderFeedBack(face, '-5')
                             break;
 
+                        } else if(isMapIntersection){
+                            this.player.decreaseLife(101)
+                            hitFeedBack.renderFeedBack(face, '- 100')
+                            break
+
                         } else if (this.goldData.isIntersection){
-                            this.addGold(this.goldData.goldId)
+                            golds.addGold(this.goldData.goldId, this.colectedGolds, face)
+                            this.colectedGolds = this.colectedGolds + 1
                             break;
 
                         } else {
-                            face.style.top = `${oldTop - 20}px`
+                            face.style.top = `${oldTop - 20}px` // face
                             body.lowLife.style.top = `${oldTop - 30 - 20}px` // hightLife
                             body.highLife.style.top = `${oldTop - 30 - 20}px` // lowLife
                             break;
@@ -190,15 +207,22 @@ class Game {
                 isObstacleIntersection = this.obstacleIntersection(obstacleList, face)
                 this.goldData = this.goldIntersection(goldList, face)
 
-                        if (isObstacleIntersection || isMapIntersection ) {
+                        if (isObstacleIntersection) {
                             face.style.left = `${oldLeft - 20}px`
                             body.lowLife.style.left = `${oldLeft - 20}px`
                             body.highLife.style.left = `${oldLeft - 20}px`
-                            this.player.decreaseLife(this.renderFeedBack('-10', '#fb5a14'))
+                            this.player.decreaseLife(5)
+                            hitFeedBack.renderFeedBack(face, '-5')
                             break;
 
-                        } else if (this.goldData.isIntersection){
-                            this.addGold(this.goldData.goldId)
+                        } else if(isMapIntersection){
+                            this.player.decreaseLife(101)
+                            hitFeedBack.renderFeedBack(face, '- 100')
+                            break
+
+                        }else if (this.goldData.isIntersection){
+                            golds.addGold(this.goldData.goldId, this.colectedGolds, face)
+                            this.colectedGolds = this.colectedGolds + 1
                             break;
 
                         } else {
@@ -213,15 +237,25 @@ class Game {
                 isObstacleIntersection = this.obstacleIntersection(obstacleList, face)
                 this.goldData = this.goldIntersection(goldList, face)
 
-                        if (isObstacleIntersection || isMapIntersection) {
+                        if (isObstacleIntersection) {
                             face.style.left = `${oldLeft + 20}px`
                             body.lowLife.style.left = `${oldLeft + 20}px`
                             body.highLife.style.left = `${oldLeft + 20}px`
-                            this.player.decreaseLife(this.renderFeedBack('-10', '#fb5a14'))
+                            this.player.decreaseLife(5)
+                            hitFeedBack.renderFeedBack(face, '-5')
                             break;
 
-                        } else if (this.goldData.isIntersection) {
-                            this.addGold(this.goldData.goldId)
+                        } else if (isMapIntersection){
+                            this.player.decreaseLife(101)
+                            hitFeedBack.renderFeedBack(face, '- 100')
+/*                             setTimeout(() => {
+                                this.play() 
+                            }, 400); */
+                            break
+
+                        }else if (this.goldData.isIntersection) {
+                            golds.addGold(this.goldData.goldId, this.colectedGolds, face)
+                            this.colectedGolds = this.colectedGolds + 1
                             break;
 
                         } else {
@@ -234,56 +268,12 @@ class Game {
         })
     }
 
-    renderGoldInfo = () => {
-        let score = document.createElement('p')
-        score.innerText = 'Gold: ' + `${this.colectedGolds}`
-        score.setAttribute('id','score')
-        this.gameInfo.appendChild(score)
-    }
-
-    addGold(goldId){
-        console.log(goldId)
-        let score = document.getElementById('score')
-        this.colectedGolds = this.colectedGolds + 1
-        score.innerText = 'Gold: ' + `${this.colectedGolds}`
-
-        this.moveGold(goldId)
-    }
-
-    moveGold(colectedGoldId){
-        console.log(colectedGoldId)
-        let colectedGoldOuter = document.getElementById(colectedGoldId)
-        let colectedGoldinner = colectedGoldOuter.nextElementSibling
-
-        let goldPosition = this.createPosition()
-        colectedGoldOuter.style.top = `${goldPosition.top}px`
-        colectedGoldOuter.style.left = `${goldPosition.left}px`
-        colectedGoldinner.style.top = `${goldPosition.top}px`
-        colectedGoldinner.style.left = `${goldPosition.left}px`
-
-        this.renderFeedBack('1$', '#f4a80d')
-        
-    }
-
-    renderFeedBack (text, color) {
-        let reward = document.createElement('p')
-        let { body: { face } } = this.player
-        reward.innerText = text
-        reward.style.position = 'absolute'
-        reward.style.color = color
-        reward.style.top = face.style.top
-        reward.style.left = face.style.left
-        reward.style.fontSize = 'xx-large'
-        this.map.appendChild(reward)
-
-        this.removeFeedBack(reward)
-    }
-
-    removeFeedBack(reward){
-        setTimeout(()=>{
-            reward.remove()
-        },500)
-    }
+        play() {
+            this.renderObstacles()
+            this.renderGolds()
+            this.golds.renderGoldInfo(this.gameInfo, this.colectedGolds)
+            this.move()
+        }
 
 }
 
