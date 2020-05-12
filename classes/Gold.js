@@ -75,8 +75,6 @@ class Gold {
     }
 
     addGold(goldId, colectedGolds, face){
-        console.log(colectedGolds)
-
         let score = document.getElementById('score')
         colectedGolds = colectedGolds + 1
         score.innerText = 'Gold: ' + `${colectedGolds}`

@@ -186,6 +186,8 @@ class Game {
 
                     if (this.obstacleIntersection(obstacleList, face)) {
                         this.left(face)
+                        this.player.decreaseLife(5)
+                        hitFeedBack.renderFeedBack(face, '-5')
                         break;
 
                     } else if (this.mapIntersection()) {
@@ -208,6 +210,8 @@ class Game {
 
                     if (this.obstacleIntersection(obstacleList, face)) {
                         this.right(face)
+                        this.player.decreaseLife(5)
+                        hitFeedBack.renderFeedBack(face, '-5')
                         break;
 
                     } else if (this.mapIntersection()) {
@@ -257,7 +261,7 @@ class Game {
         body.highLife.style.left = `${oldLeft + 20}px`
     }
 
-    
+
     up(face) {
         let { body } = this.player
         let oldTop = parseInt(face.style.top);
