@@ -95,11 +95,16 @@ class Player {
         this.body.highLife.innerText = `${this.life}%`
         this.body.highLife.style.width = `0px`
         this.body.highLife.style.height = `0px`
-
         this.body.highLife.innerText = `${this.life}%`
-        setTimeout(function(){
+
+        let noRepet = setTimeout(function(){
             alert('game over')
-        }, 300)
+            clearTimeout(noRepet)
+        }, 600)
+
+        setTimeout(function(){
+            location.reload();
+        }, 2000)
     }
 
 }

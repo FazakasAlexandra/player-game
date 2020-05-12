@@ -2,7 +2,6 @@ import {FeedBack} from "./FeedBack.js"
 
 class Gold {
     constructor(map, mapWidth, mapHeight, nrGold){
-        //get rid of the map
         this.map = map
         this.mapWidth = mapWidth
         this.mapHeight = mapHeight

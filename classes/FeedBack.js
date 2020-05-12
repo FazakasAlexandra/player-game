@@ -6,7 +6,6 @@ class FeedBack {
 
     renderFeedBack (face, text) {
         let reward = document.createElement('p')
-        //let { body: { face } } = this.player
 
         reward.innerText = text
         reward.style.position = 'absolute'
